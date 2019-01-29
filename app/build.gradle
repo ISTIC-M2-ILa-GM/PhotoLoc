@@ -19,6 +19,8 @@ android {
 }
 
 dependencies {
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
     compileOnly 'org.projectlombok:lombok:1.18.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
     implementation 'com.jakewharton:butterknife:8.8.1'
