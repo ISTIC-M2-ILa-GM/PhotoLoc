@@ -1,12 +1,11 @@
 package fr.istic.hbmlh.photoloc.repository;
 
-import android.os.AsyncTask;
+import static fr.istic.hbmlh.photoloc.exception.PhotoLocException.MESSAGE;
 
 import java.util.concurrent.Callable;
 
+import android.os.AsyncTask;
 import fr.istic.hbmlh.photoloc.exception.PhotoLocException;
-
-import static fr.istic.hbmlh.photoloc.exception.PhotoLocException.MESSAGE;
 
 public class AsyncRepository<T> extends AsyncTask<Void, Void, T> {
 
@@ -34,5 +33,12 @@ public class AsyncRepository<T> extends AsyncTask<Void, Void, T> {
             throw new PhotoLocException(String.format(MESSAGE, "PhotoService", "callable error"), e);
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(T t) {
+        super.onPostExecute(t);
+
+
     }
 }

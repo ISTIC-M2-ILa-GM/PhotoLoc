@@ -2,7 +2,7 @@ package fr.istic.hbmlh.photoloc;
 
 import static fr.istic.hbmlh.photoloc.service.impl.PhotoServiceImpl.REQUEST_TAKE_PHOTO;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.istic.hbmlh.photoloc.adapter.PhotoLocAdapter;
-import fr.istic.hbmlh.photoloc.model.PhotoLoc;
 import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
 import fr.istic.hbmlh.photoloc.repository.impl.RepositoriesImpl;
 import fr.istic.hbmlh.photoloc.service.PhotoService;
@@ -47,13 +47,21 @@ public class MainActivity extends AppCompatActivity {
 
         photoLocRepository = new RepositoriesImpl(this).getPhotoLocRepository();
         photoService = new PhotoServiceImpl(photoLocRepository);
-        btnPhoto.setOnClickListener((view) -> photoService.takePicture(this));
 
-        final List<PhotoLoc> photos = this.photoLocRepository.findAll();
+        btnPhoto.setOnClickListener((view) -> {
+            photoService.takePicture(this);
+        });
 
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final PhotoLocAdapter adapter = new PhotoLocAdapter(new ArrayList<>());
+        this.recyclerView.setAdapter(adapter);
 
-        this.recyclerView.setAdapter(new PhotoLocAdapter(photos));
+        this.photoLocRepository.findAll().observe(this, photos -> {
+            Toast.makeText(this, "Observe OK", Toast.LENGTH_SHORT).show();
+            adapter.setPhotos(photos);
+            adapter.notifyDataSetChanged();
+        });
+
     }
 
     @Override
