@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PhotoLoc</string>
+    <string name="btn_photo">Take a picture</string>
+    <string name="btn_map">Show map</string>
 </resources>
