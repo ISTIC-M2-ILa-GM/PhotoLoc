@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,5 +28,45 @@ public class PhotoLoc {
 
     private Long latitude;
 
-    private ZonedDateTime date;
+    private Date date;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public Long getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Long longitude) {
+        this.longitude = longitude;
+    }
+
+    public Long getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Long latitude) {
+        this.latitude = latitude;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }
