@@ -1,4 +1,4 @@
-package fr.istic.hbmlh.photoloc.repository;
+package fr.istic.hbmlh.photoloc.repository.utils;
 
 import android.arch.persistence.room.TypeConverter;
 
