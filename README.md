@@ -1,7 +1,8 @@
 # Projet MMM
 
 ## Binômes
-* Gwénolé LE HENAF
+* Charles LARZILLIERE
+* Gwénolé LE HENAFF
 * Hugo BANNIER
 
 ## Technologies
@@ -9,3 +10,6 @@
 * Java 8
 * Gradle
 * Lombok
+
+## Build
+Ajouter la clé API de google map

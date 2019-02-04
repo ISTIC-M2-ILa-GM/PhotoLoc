@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         photoLocRepository = new RepositoriesImpl(this).getPhotoLocRepository();
         photoService = new PhotoServiceImpl(photoLocRepository);
         btnPhoto.setOnClickListener((view) -> photoService.takePicture(this));
+        btnMap.setOnClickListener(v -> startActivity(new Intent(this, MapsActivity.class)));
     }
 
     @Override
