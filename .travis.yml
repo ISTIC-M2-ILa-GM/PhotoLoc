@@ -17,5 +17,5 @@ cache:
 
 jobs:
   include:
-  - script: gradle build connectedCheck
+  - script: ./gradlew build connectedCheck -x lint
     name: Build
