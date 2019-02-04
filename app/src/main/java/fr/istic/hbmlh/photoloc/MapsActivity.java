@@ -1,7 +1,8 @@
 package fr.istic.hbmlh.photoloc;
 
-import android.support.v4.app.FragmentActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,9 +11,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import fr.istic.hbmlh.photoloc.exception.PhotoLocException;
+import fr.istic.hbmlh.photoloc.model.PhotoLoc;
+import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
+import fr.istic.hbmlh.photoloc.repository.impl.RepositoriesImpl;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    private PhotoLocRepository photoLocRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +30,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        photoLocRepository = new RepositoriesImpl(this).getPhotoLocRepository();
     }
 
 
@@ -37,10 +46,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        AsyncTask.execute(() -> photoLocRepository.findAll().forEach(this::addMarker));
+    }
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    private void addMarker(PhotoLoc photoLoc) {
+        if (photoLoc == null || photoLoc.getLatitude() == null || photoLoc.getLongitude() == null) {
+            throw new PhotoLocException("MapsActivity: Photo position is null");
+        }
+        LatLng latLng = new LatLng(photoLoc.getLatitude(), photoLoc.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(latLng).title(photoLoc.getFilePath()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 }
