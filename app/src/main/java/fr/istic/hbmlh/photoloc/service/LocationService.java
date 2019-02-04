@@ -1,0 +1,54 @@
+package fr.istic.hbmlh.photoloc.service;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
+import android.view.View;
+import android.widget.Toast;
+
+public class LocationService {
+
+    private final LocationManager locationManager;
+    private final Context context;
+    private Location currentLocation;
+
+
+    public LocationService(Context context) {
+        this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        this.context = context;
+    }
+
+
+    public Location getUserLocation() {
+        try {
+            updateGpsCoordinate();
+            if (currentLocation == null) {
+                Toast.makeText(context,
+                        "Aucune coordonnée GPS.", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        } catch (SecurityException e) {
+            System.out.println("Erreur lors de la récuparation des coordonnées GPS: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return currentLocation;
+    }
+
+
+    public void updateGpsCoordinate() {
+        if (ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context,
+                    "Erreur : aucune permission pour acceder au GPS.", Toast.LENGTH_SHORT).show();
+        } else {
+            String locationProvider = LocationManager.NETWORK_PROVIDER;
+            Location loc = locationManager.getLastKnownLocation(locationProvider);
+            if (loc != null) {
+                this.currentLocation = loc;
+            }
+        }
+    }
+
+}
