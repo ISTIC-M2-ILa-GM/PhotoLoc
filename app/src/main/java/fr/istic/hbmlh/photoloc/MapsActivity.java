@@ -1,6 +1,5 @@
 package fr.istic.hbmlh.photoloc;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
@@ -11,7 +10,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import fr.istic.hbmlh.photoloc.exception.PhotoLocException;
 import fr.istic.hbmlh.photoloc.model.PhotoLoc;
 import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
 import fr.istic.hbmlh.photoloc.repository.impl.RepositoriesImpl;
@@ -46,12 +44,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        AsyncTask.execute(() -> photoLocRepository.findAll().forEach(this::addMarker));
+        photoLocRepository.findAll().observe(this, photoLocs -> photoLocs.forEach(this::addMarker));
     }
 
     private void addMarker(PhotoLoc photoLoc) {
         if (photoLoc == null || photoLoc.getLatitude() == null || photoLoc.getLongitude() == null) {
-            throw new PhotoLocException("MapsActivity: Photo position is null");
+            return;
         }
         LatLng latLng = new LatLng(photoLoc.getLatitude(), photoLoc.getLongitude());
         mMap.addMarker(new MarkerOptions().position(latLng).title(photoLoc.getFilePath()));

@@ -72,8 +72,10 @@ public class PhotoServiceImpl implements PhotoService {
         photoLoc.setFilePath(lastPicturePath);
         photoLoc.setDate(new Date());
         Location locToSet = this.locationService.getUserLocation();
-        photoLoc.setLatitude(locToSet.getLatitude());
-        photoLoc.setLongitude(locToSet.getLongitude());
+        if (locToSet != null) {
+            photoLoc.setLatitude(locToSet.getLatitude());
+            photoLoc.setLongitude(locToSet.getLongitude());
+        }
         new AsyncRepository<Void>(() -> photoLocRepository.insert(photoLoc)).execute();
         lastPicturePath = null;
     }
