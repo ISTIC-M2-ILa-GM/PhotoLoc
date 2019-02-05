@@ -2,6 +2,7 @@ package fr.istic.hbmlh.photoloc.service.impl;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -17,6 +18,7 @@ import fr.istic.hbmlh.photoloc.exception.PhotoLocException;
 import fr.istic.hbmlh.photoloc.model.PhotoLoc;
 import fr.istic.hbmlh.photoloc.repository.AsyncRepository;
 import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
+import fr.istic.hbmlh.photoloc.service.LocationService;
 import fr.istic.hbmlh.photoloc.service.PhotoService;
 
 import static fr.istic.hbmlh.photoloc.exception.PhotoLocException.MESSAGE;
@@ -31,8 +33,11 @@ public class PhotoServiceImpl implements PhotoService {
 
     private PhotoLocRepository photoLocRepository;
 
-    public PhotoServiceImpl(PhotoLocRepository photoLocRepository) {
+    private LocationService locationService;
+
+    public PhotoServiceImpl(PhotoLocRepository photoLocRepository, LocationService locationService) {
         this.photoLocRepository = photoLocRepository;
+        this.locationService = locationService;
     }
 
     @Override
@@ -66,8 +71,9 @@ public class PhotoServiceImpl implements PhotoService {
         PhotoLoc photoLoc = new PhotoLoc();
         photoLoc.setFilePath(lastPicturePath);
         photoLoc.setDate(new Date());
-//        photoLoc.setLatitude();
-//        photoLoc.setLongitude();
+        Location locToSet = this.locationService.getUserLocation();
+        photoLoc.setLatitude(locToSet.getLatitude());
+        photoLoc.setLongitude(locToSet.getLongitude());
         new AsyncRepository<Void>(() -> photoLocRepository.insert(photoLoc)).execute();
         lastPicturePath = null;
     }
