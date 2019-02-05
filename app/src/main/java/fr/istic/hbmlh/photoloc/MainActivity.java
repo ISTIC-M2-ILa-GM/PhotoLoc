@@ -1,9 +1,5 @@
 package fr.istic.hbmlh.photoloc;
 
-import static fr.istic.hbmlh.photoloc.service.impl.PhotoServiceImpl.REQUEST_TAKE_PHOTO;
-
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +14,10 @@ import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
 import fr.istic.hbmlh.photoloc.repository.impl.RepositoriesImpl;
 import fr.istic.hbmlh.photoloc.service.PhotoService;
 import fr.istic.hbmlh.photoloc.service.impl.PhotoServiceImpl;
+
+import java.util.Collections;
+
+import static fr.istic.hbmlh.photoloc.service.impl.PhotoServiceImpl.REQUEST_TAKE_PHOTO;
 
 /**
  * Activity principal de l'application
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         photoLocRepository = new RepositoriesImpl(this).getPhotoLocRepository();
+
         photoService = new PhotoServiceImpl(photoLocRepository);
 
         btnPhoto.setOnClickListener((view) -> {
@@ -53,13 +54,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        final PhotoLocAdapter adapter = new PhotoLocAdapter(new ArrayList<>());
+        final PhotoLocAdapter adapter = new PhotoLocAdapter(Collections.emptyList());
         this.recyclerView.setAdapter(adapter);
 
         this.photoLocRepository.findAll().observe(this, photos -> {
-            Toast.makeText(this, "Observe OK", Toast.LENGTH_SHORT).show();
-            adapter.setPhotos(photos);
-            adapter.notifyDataSetChanged();
+            runOnUiThread(() -> {
+                Toast.makeText(this, "Observe OK", Toast.LENGTH_SHORT).show();
+                adapter.setPhotos(photos);
+                adapter.notifyDataSetChanged();
+            });
         });
 
     }
