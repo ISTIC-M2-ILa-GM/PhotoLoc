@@ -10,6 +10,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import fr.istic.hbmlh.photoloc.adapter.MapItemAdapter;
 import fr.istic.hbmlh.photoloc.model.PhotoLoc;
 import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
 import fr.istic.hbmlh.photoloc.repository.impl.RepositoriesImpl;
@@ -44,6 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(new MapItemAdapter(this));
         photoLocRepository.findAll().observe(this, photoLocs -> photoLocs.forEach(this::addMarker));
     }
 

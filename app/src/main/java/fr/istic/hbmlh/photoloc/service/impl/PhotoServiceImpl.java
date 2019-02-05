@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
@@ -16,7 +17,6 @@ import java.util.Locale;
 
 import fr.istic.hbmlh.photoloc.exception.PhotoLocException;
 import fr.istic.hbmlh.photoloc.model.PhotoLoc;
-import fr.istic.hbmlh.photoloc.repository.AsyncRepository;
 import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
 import fr.istic.hbmlh.photoloc.service.LocationService;
 import fr.istic.hbmlh.photoloc.service.PhotoService;
@@ -76,7 +76,7 @@ public class PhotoServiceImpl implements PhotoService {
             photoLoc.setLatitude(locToSet.getLatitude());
             photoLoc.setLongitude(locToSet.getLongitude());
         }
-        new AsyncRepository<Void>(() -> photoLocRepository.insert(photoLoc)).execute();
+        AsyncTask.execute(() -> photoLocRepository.insert(photoLoc));
         lastPicturePath = null;
     }
 }
