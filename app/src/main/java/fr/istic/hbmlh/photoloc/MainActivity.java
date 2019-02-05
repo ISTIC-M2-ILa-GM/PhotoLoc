@@ -58,11 +58,9 @@ public class MainActivity extends AppCompatActivity {
         this.recyclerView.setAdapter(adapter);
 
         this.photoLocRepository.findAll().observe(this, photos -> {
-            runOnUiThread(() -> {
                 Toast.makeText(this, "Observe OK", Toast.LENGTH_SHORT).show();
                 adapter.setPhotos(photos);
                 adapter.notifyDataSetChanged();
-            });
         });
 
     }
