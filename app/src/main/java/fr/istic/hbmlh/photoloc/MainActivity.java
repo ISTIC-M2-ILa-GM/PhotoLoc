@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.istic.hbmlh.photoloc.adapter.PhotoLocAdapter;
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         this.recyclerView.setAdapter(adapter);
 
         this.photoLocRepository.findAll().observe(this, photos -> {
-                Toast.makeText(this, "Observe OK", Toast.LENGTH_SHORT).show();
                 adapter.setPhotos(photos);
                 adapter.notifyDataSetChanged();
         });

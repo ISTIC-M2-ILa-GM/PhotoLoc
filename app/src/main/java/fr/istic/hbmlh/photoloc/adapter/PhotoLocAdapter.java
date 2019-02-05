@@ -1,16 +1,15 @@
 package fr.istic.hbmlh.photoloc.adapter;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.squareup.picasso.Picasso;
 import fr.istic.hbmlh.photoloc.R;
 import fr.istic.hbmlh.photoloc.model.PhotoLoc;
 
-import java.io.File;
 import java.util.List;
 
 public class PhotoLocAdapter extends RecyclerView.Adapter<PhotoLocAdapter.PhotoLocViewHolder> {
@@ -63,16 +62,12 @@ public class PhotoLocAdapter extends RecyclerView.Adapter<PhotoLocAdapter.PhotoL
                     PhotoLocViewHolder holder, int position) {
         final PhotoLoc photo = photos.get(position);
 
-//        Picasso.get().load(photo.getFilePath()).into(holder.imageView);
+        Picasso.get().load("file://" + photo.getFilePath())
+//                .resizeDimen(100, 100)
+                .resize(100, 100).centerCrop()
+//                .fit()
+                .into(holder.imageView);
 
-        final File file = new File(photo.getFilePath());
-        if (!file.exists()) {
-            throw new RuntimeException("Le fichier n'existe pas " + photo.getFilePath());
-        }
-
-        final Uri uri = Uri.fromFile(file);
-
-        holder.imageView.setImageURI(uri);
     }
 
     @Override
