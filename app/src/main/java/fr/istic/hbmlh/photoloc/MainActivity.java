@@ -10,6 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
 import fr.istic.hbmlh.photoloc.repository.impl.RepositoriesImpl;
+import fr.istic.hbmlh.photoloc.service.LocationService;
 import fr.istic.hbmlh.photoloc.service.PhotoService;
 import fr.istic.hbmlh.photoloc.service.impl.PhotoServiceImpl;
 
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private PhotoService photoService;
 
+    private LocationService locationService;
+
     private PhotoLocRepository photoLocRepository;
 
     @Override
@@ -42,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         photoLocRepository = new RepositoriesImpl(this).getPhotoLocRepository();
-        photoService = new PhotoServiceImpl(photoLocRepository);
+        locationService = new LocationService(this);
+        photoService = new PhotoServiceImpl(photoLocRepository, locationService);
         btnPhoto.setOnClickListener((view) -> photoService.takePicture(this));
     }
 
