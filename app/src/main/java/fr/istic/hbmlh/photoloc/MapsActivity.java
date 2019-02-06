@@ -3,11 +3,14 @@ package fr.istic.hbmlh.photoloc;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import fr.istic.hbmlh.photoloc.adapter.MapItemAdapter;
@@ -45,17 +48,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setInfoWindowAdapter(new MapItemAdapter(this));
-        photoLocRepository.findAll().observe(this, photoLocs -> photoLocs.forEach(this::addMarker));
+        photoLocRepository.findAll().observe(this, photoLocs -> {
+            if (photoLocs != null) {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                photoLocs.forEach(p -> {
+                    Marker marker = addMarker(p);
+                    if (marker != null) {
+                        builder.include(marker.getPosition());
+                    }
+                });
+                if (photoId == null) {
+                    LatLngBounds bounds = builder.build();
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
+                    googleMap.moveCamera(cu);
+                }
+            }
+        });
     }
 
-    private void addMarker(PhotoLoc photoLoc) {
+    private Marker addMarker(PhotoLoc photoLoc) {
         if (photoLoc == null || photoLoc.getLatitude() == null || photoLoc.getLongitude() == null) {
-            return;
+            return null;
         }
         LatLng latLng = new LatLng(photoLoc.getLatitude(), photoLoc.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(latLng).title(photoLoc.getFilePath()));
-        if (photoId == null || photoId.equals(photoLoc.getId())) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(photoLoc.getFilePath()));
+        if (photoId != null && photoId.equals(photoLoc.getId())) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
+        return marker;
     }
 }
