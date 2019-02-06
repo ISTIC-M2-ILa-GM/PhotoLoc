@@ -17,14 +17,23 @@ import fr.istic.hbmlh.photoloc.repository.impl.RepositoriesImpl;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    public static final String PHOTO_ID = "photo";
+
     private GoogleMap mMap;
 
     private PhotoLocRepository photoLocRepository;
+
+    private Integer photoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(PHOTO_ID)) {
+            photoId = getIntent().getExtras().getInt(PHOTO_ID);
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -32,16 +41,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         photoLocRepository = new RepositoriesImpl(this).getPhotoLocRepository();
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -55,6 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         LatLng latLng = new LatLng(photoLoc.getLatitude(), photoLoc.getLongitude());
         mMap.addMarker(new MarkerOptions().position(latLng).title(photoLoc.getFilePath()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        if (photoId == null || photoId.equals(photoLoc.getId())) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        }
     }
 }
