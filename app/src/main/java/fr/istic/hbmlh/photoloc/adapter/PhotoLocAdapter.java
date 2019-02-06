@@ -1,5 +1,7 @@
 package fr.istic.hbmlh.photoloc.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
+import fr.istic.hbmlh.photoloc.MapsActivity;
 import fr.istic.hbmlh.photoloc.R;
 import fr.istic.hbmlh.photoloc.model.PhotoLoc;
 
@@ -31,10 +34,6 @@ public class PhotoLocAdapter extends RecyclerView.Adapter<PhotoLocAdapter.PhotoL
         public PhotoLocViewHolder(View v) {
             super(v);
             imageView = v.findViewById(R.id.img_view);
-        }
-
-        public ImageView getImageView() {
-            return imageView;
         }
     }
 
@@ -64,9 +63,16 @@ public class PhotoLocAdapter extends RecyclerView.Adapter<PhotoLocAdapter.PhotoL
 
         Picasso.get().load("file://" + photo.getFilePath())
 //                .resizeDimen(100, 100)
-                .resize(100, 100).centerCrop()
+                .resize(500, 500).centerCrop()
 //                .fit()
                 .into(holder.imageView);
+
+        holder.imageView.setOnClickListener((view) -> {
+            final Context context = view.getContext();
+            final Intent intent = new Intent(context, MapsActivity.class);
+            intent.putExtra(MapsActivity.PHOTO_ID, photo.getId());
+            context.startActivity(intent);
+        });
 
     }
 
