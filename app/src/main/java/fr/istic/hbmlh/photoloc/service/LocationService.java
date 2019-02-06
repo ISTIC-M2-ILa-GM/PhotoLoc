@@ -7,8 +7,10 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.view.View;
 import android.widget.Toast;
+
+import fr.istic.hbmlh.photoloc.manager.HttpRequest;
+import fr.istic.hbmlh.photoloc.model.AdressListener;
 
 public class LocationService {
 
@@ -67,6 +69,14 @@ public class LocationService {
                 || Build.MANUFACTURER.contains("Genymotion")
                 || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
                 || "google_sdk".equals(Build.PRODUCT);
+    }
+
+    public void getAdressFromLocation(Location location, AdressListener adressListener){
+
+        HttpRequest httpRequest = new HttpRequest();
+        httpRequest.getAdressFromLocation(location, data -> {
+            adressListener.findAddress(data.formatted_address);
+        });
     }
 
 }
