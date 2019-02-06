@@ -45,7 +45,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setInfoWindowAdapter(new MapItemAdapter(this));
-        photoLocRepository.findAll().observe(this, photoLocs -> photoLocs.forEach(this::addMarker));
+        photoLocRepository.findAll().observe(this, photoLocs -> {
+            if (photoLocs != null) {
+                photoLocs.forEach(this::addMarker);
+            }
+        });
     }
 
     private void addMarker(PhotoLoc photoLoc) {
