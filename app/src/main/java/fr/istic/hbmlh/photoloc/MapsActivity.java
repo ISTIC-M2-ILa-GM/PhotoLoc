@@ -59,7 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng latLng = new LatLng(photoLoc.getLatitude(), photoLoc.getLongitude());
         mMap.addMarker(new MarkerOptions().position(latLng).title(photoLoc.getFilePath()));
         if (photoId == null || photoId.equals(photoLoc.getId())) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
     }
 }
