@@ -73,7 +73,7 @@ public class LocationService {
 
     public void getAdressFromLocation(Location location, AdressListener adressListener){
 
-        HttpRequest httpRequest = new HttpRequest();
+        HttpRequest httpRequest = new HttpRequest(context);
         httpRequest.getAdressFromLocation(location, data -> {
             adressListener.findAddress(data.formatted_address);
         });
