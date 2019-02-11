@@ -51,13 +51,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         photoLocRepository.findAll().observe(this, photoLocs -> {
             if (photoLocs != null) {
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                photoLocs.forEach(p -> {
+                boolean hasMarker = false;
+                for (PhotoLoc p : photoLocs) {
                     Marker marker = addMarker(p);
                     if (marker != null) {
                         builder.include(marker.getPosition());
+                        hasMarker = true;
                     }
-                });
-                if (photoId == null) {
+                }
+                if (photoId == null && hasMarker) {
                     LatLngBounds bounds = builder.build();
                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
                     googleMap.moveCamera(cu);

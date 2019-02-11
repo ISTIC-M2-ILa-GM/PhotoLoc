@@ -6,16 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
+
+import java.util.Collections;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.istic.hbmlh.photoloc.adapter.PhotoLocAdapter;
+import fr.istic.hbmlh.photoloc.manager.HttpRequest;
 import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
 import fr.istic.hbmlh.photoloc.repository.impl.RepositoriesImpl;
 import fr.istic.hbmlh.photoloc.service.LocationService;
 import fr.istic.hbmlh.photoloc.service.PhotoService;
 import fr.istic.hbmlh.photoloc.service.impl.PhotoServiceImpl;
-
-import java.util.Collections;
 
 import static fr.istic.hbmlh.photoloc.service.impl.PhotoServiceImpl.REQUEST_TAKE_PHOTO;
 
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         locationService = new LocationService(this);
         photoLocRepository = new RepositoriesImpl(this).getPhotoLocRepository();
-        photoService = new PhotoServiceImpl(photoLocRepository, locationService);
+        photoService = new PhotoServiceImpl(photoLocRepository, locationService, new HttpRequest(this));
         btnPhoto.setOnClickListener((view) -> photoService.takePicture(this));
         btnMap.setOnClickListener(v -> startActivity(new Intent(this, MapsActivity.class)));
 

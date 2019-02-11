@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import fr.istic.hbmlh.photoloc.exception.PhotoLocException;
+import fr.istic.hbmlh.photoloc.manager.HttpRequest;
 import fr.istic.hbmlh.photoloc.model.PhotoLoc;
 import fr.istic.hbmlh.photoloc.repository.PhotoLocRepository;
 import fr.istic.hbmlh.photoloc.service.LocationService;
@@ -29,15 +30,18 @@ public class PhotoServiceImpl implements PhotoService {
 
     public static final int REQUEST_TAKE_PHOTO = 1;
 
+    private HttpRequest httpRequest;
+
     private String lastPicturePath;
 
     private PhotoLocRepository photoLocRepository;
 
     private LocationService locationService;
 
-    public PhotoServiceImpl(PhotoLocRepository photoLocRepository, LocationService locationService) {
+    public PhotoServiceImpl(PhotoLocRepository photoLocRepository, LocationService locationService, HttpRequest httpRequest) {
         this.photoLocRepository = photoLocRepository;
         this.locationService = locationService;
+        this.httpRequest = httpRequest;
     }
 
     @Override
@@ -59,8 +63,7 @@ public class PhotoServiceImpl implements PhotoService {
     private File createImageFile(Activity activity) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
         File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(String.format(FILE_NAME, timeStamp), ".jpg", storageDir);
-        return image;
+        return File.createTempFile(String.format(FILE_NAME, timeStamp), ".jpg", storageDir);
     }
 
     @Override
@@ -75,6 +78,10 @@ public class PhotoServiceImpl implements PhotoService {
         if (locToSet != null) {
             photoLoc.setLatitude(locToSet.getLatitude());
             photoLoc.setLongitude(locToSet.getLongitude());
+            // TODO
+//            httpRequest.getAdressFromLocation(locToSet, data -> {
+//                photoLoc.setAddress(data.formatted_address);
+//            });
         }
         AsyncTask.execute(() -> photoLocRepository.insert(photoLoc));
         lastPicturePath = null;

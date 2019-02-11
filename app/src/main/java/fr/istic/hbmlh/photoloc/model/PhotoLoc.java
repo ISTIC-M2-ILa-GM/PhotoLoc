@@ -3,12 +3,13 @@ package fr.istic.hbmlh.photoloc.model;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Data
 @Builder
@@ -26,6 +27,8 @@ public class PhotoLoc {
     private Double longitude;
 
     private Double latitude;
+
+    private String address;
 
     private Date date;
 
@@ -67,5 +70,13 @@ public class PhotoLoc {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
