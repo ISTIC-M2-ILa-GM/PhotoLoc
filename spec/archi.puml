@@ -1,0 +1,29 @@
+@startuml
+database SQLite as sql
+component Room as r
+component GoogleMaps as goog
+component PhotoContentProvider as cp
+component LocationManager as lm
+component FileSystem as fs
+node PhotoLoc as pl {
+    component Repository as rep
+
+    package ui {
+        component MapActivity as map
+        component MainActivity as main
+    }
+    package service {
+        component PhotoService as ps
+        component LocationService as ls
+    }
+}
+ps --> rep:save Point
+rep --> r
+r --> sql
+map -> goog: getFragment
+ps --> cp: startActivity
+ls --> lm: getLastKnownLocation
+main --> ps: takePicture
+main --> rep: subscribe
+ps -> fs: saveFile
+@enduml

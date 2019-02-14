@@ -13,3 +13,5 @@
 
 ## Build
 Ajouter la clé API de google map
+
+[architecture](./spec/archi.png)
