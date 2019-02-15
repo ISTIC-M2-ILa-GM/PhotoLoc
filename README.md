@@ -14,4 +14,4 @@
 ## Build
 Ajouter la clé API de google map
 
-[architecture](./spec/archi.png)
+[architecture](https://github.com/ISTIC-M2-ILa-GM/PhotoLoc/raw/master/spec/archi.png)

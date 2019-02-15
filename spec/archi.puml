@@ -26,4 +26,5 @@ ls --> lm: getLastKnownLocation
 main --> ps: takePicture
 main --> rep: subscribe
 ps -> fs: saveFile
+ps -> ls: getUserLocation
 @enduml
